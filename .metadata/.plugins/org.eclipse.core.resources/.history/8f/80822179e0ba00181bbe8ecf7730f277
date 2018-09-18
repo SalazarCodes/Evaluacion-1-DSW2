@@ -1,0 +1,90 @@
+package consultaONPE;
+
+import java.net.*;
+import java.io.*;
+import java.util.ArrayList;
+import p.cibertec.edu.*;
+public class servidor {
+
+	private static productos obj_catalogo;
+	private static ArrayList<productos> lst_catalogo;
+	
+	public static void main(String[] args) {
+	
+		int pre,cant,tot,desc;
+		String a,b,c;
+		ServerSocket ss=null;
+		try
+		{
+			ss=new ServerSocket(5051);
+			
+			Socket sl=ss.accept();
+			InputStream is=sl.getInputStream();
+			DataInputStream dis=new DataInputStream(is);
+			a=dis.readUTF();
+			System.out.println("Codigo del producto:"+a);
+			
+			Socket sll=ss.accept();
+			InputStream is2=sll.getInputStream();
+			DataInputStream dis2=new DataInputStream(is2);
+			b=dis2.readUTF();
+			System.out.println("La Cantidad Recibida es:"+b);
+			
+			Socket slll=ss.accept();
+			InputStream is3=slll.getInputStream();
+			DataInputStream dis3=new DataInputStream(is3);
+			c=dis3.readUTF();
+			System.out.println("Tipo de Cliente:"+c);
+			
+			
+			pre=find_producto(a);
+			cant=Integer.parseInt(b);
+			tot=pre*cant;
+			desc=Integer.parseInt(c);
+			
+			
+			Socket sc=new Socket("localhost",5052);
+			OutputStream os=sc.getOutputStream();
+			DataOutputStream dos=new DataOutputStream(os);
+			dos.writeUTF("El importe a pagar es:"+Integer.toString(tot));
+			
+			dos.close();
+			sl.close();
+			sll.close();
+			
+		}catch (IOException e) {
+			System.out.println(e.getMessage().toString());
+		}
+	}
+	
+	private static void llenardatos() {
+		lst_catalogo=new ArrayList<productos>();
+		obj_catalogo=new productos("A100","Televisor",1700);
+		lst_catalogo.add(obj_catalogo);
+		
+		obj_catalogo=new productos("A200","Laptop",3500);
+		lst_catalogo.add(obj_catalogo);
+		
+		obj_catalogo=new productos("A300","Play",2300);
+		lst_catalogo.add(obj_catalogo);
+		
+		obj_catalogo=new productos("A400","Smartphone",800);
+		lst_catalogo.add(obj_catalogo);
+	
+	}
+
+	private static int find_producto(String cod) {
+		int lenlista,precio=0;
+		String codprodb="";
+		llenardatos();
+		lenlista=lst_catalogo.size();
+		for (int i=0; i<lenlista;i++) {
+			codprodb=lst_catalogo.get(i).getCodigo().toString();
+			if (codprodb.equals(cod)) {
+				precio=lst_catalogo.get(i).getPrecio();
+				break;
+			}
+		}
+		return precio;
+	}
+}

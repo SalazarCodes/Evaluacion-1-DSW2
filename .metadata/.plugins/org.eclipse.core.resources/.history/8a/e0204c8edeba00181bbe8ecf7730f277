@@ -1,0 +1,12 @@
+package consultaONPE;
+
+public class Object {
+	
+	int value ;
+	String id;
+	public Object(int v, String s ){
+	this.value=v;
+	this.id=s;
+	}
+	
+}

@@ -1,0 +1,12 @@
+package consultaONPE;
+
+public class clienteONPE {
+	
+	private String dni;
+	private String lugar;
+	private String miembro;
+	private String direccion;
+	private String ubicacion;
+	private String nromesa;
+
+}

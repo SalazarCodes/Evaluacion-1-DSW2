@@ -1,0 +1,92 @@
+package consultaONPE;
+
+import java.net.*;
+import java.io.*;
+import java.util.ArrayList;
+import consultaONPE.*;
+
+public class servidor {
+
+	private static clienteONPE obj_onpe;
+	private static ArrayList<clienteONPE> lst_onpe;
+	
+	public static void main(String[] args) {
+	
+		int pre,cant,tot,desc;
+		String a,b,c;
+		ServerSocket ss=null;
+		try
+		{
+			ss=new ServerSocket(5051);
+			
+			Socket sl=ss.accept();
+			InputStream is=sl.getInputStream();
+			DataInputStream dis=new DataInputStream(is);
+			a=dis.readUTF();
+			System.out.println("Codigo del producto:"+a);
+			
+			Socket sll=ss.accept();
+			InputStream is2=sll.getInputStream();
+			DataInputStream dis2=new DataInputStream(is2);
+			b=dis2.readUTF();
+			System.out.println("La Cantidad Recibida es:"+b);
+			
+			Socket slll=ss.accept();
+			InputStream is3=slll.getInputStream();
+			DataInputStream dis3=new DataInputStream(is3);
+			c=dis3.readUTF();
+			System.out.println("Tipo de Cliente:"+c);
+			
+			
+			pre=find_producto(a);
+			cant=Integer.parseInt(b);
+			tot=pre*cant;
+			desc=Integer.parseInt(c);
+			
+			
+			Socket sc=new Socket("localhost",5052);
+			OutputStream os=sc.getOutputStream();
+			DataOutputStream dos=new DataOutputStream(os);
+			dos.writeUTF("El importe a pagar es:"+Integer.toString(tot));
+			
+			dos.close();
+			sl.close();
+			sll.close();
+			
+		}catch (IOException e) {
+			System.out.println(e.getMessage().toString());
+		}
+	}
+	
+	private static void llenardatos() {
+		lst_onpe=new ArrayList<clienteONPE>();
+		obj_onpe=new clienteONPE("46551019","Colegio Marianistas","SI","Jiron Huaraz 1472 - Jesus Maria","Salon 931","Mesa 146");
+		lst_onpe.add(obj_onpe);
+		
+		obj_onpe=new clienteONPE("84545974","Colegio Trilce","SI","Avenida la marina 2245 - San Miguel","Salon 5A","Mesa 11");
+		lst_onpe.add(obj_onpe);
+		
+		obj_onpe=new clienteONPE("25594993","Colegio La Salle","NO","Avenida Arica 455 - Breña","Salon 1C","Mesa 93");
+		lst_onpe.add(obj_onpe);
+		
+		obj_onpe=new clienteONPE("72501550","Colegio San Judas Tadeo","SI","Avenida Proceres 2873 - San Juan de Lurigancho","Salon abejitas","Mesa 11");
+		lst_onpe.add(obj_onpe);
+	
+	}
+
+	private static ArrayList<clienteONPE> buscaOnpe(String dni) {
+		
+		ArrayList<clienteONPE> lista = new ArrayList<>();
+		
+		for (clienteONPE o:lst_onpe){			
+			if(o.getDni().equals(dni)){
+				o.getLugar();
+				o.getMiembro();
+				o.getDireccion();
+				o.getUbicacion();
+				o.getNromesa();
+				lista.add(o);
+			}
+		}
+	}
+}

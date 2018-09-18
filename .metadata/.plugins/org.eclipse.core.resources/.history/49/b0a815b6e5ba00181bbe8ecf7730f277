@@ -1,0 +1,27 @@
+package consultaONPE;
+import java.net.*;
+import java.io.*;
+import java.util.ArrayList;
+
+public class cliente {
+
+	public static void main(String[] args) {
+		ServerSocket ss=null;
+		try {
+			ss=new ServerSocket(5051);
+			System.out.println("Ingrese su numero de DNI : ");
+			BufferedReader bf=new BufferedReader
+					(new InputStreamReader(System.in));
+			
+
+			Socket s1=ss.accept();
+			InputStream is=s1.getInputStream();
+			DataInputStream dis=new DataInputStream(is);
+			System.out.println(dis.readUTF());
+		
+		}catch (IOException e) {
+			System.out.println(e.getMessage().toString());
+		}
+
+	}
+}
